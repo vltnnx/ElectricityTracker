@@ -4,6 +4,7 @@ import webbrowser
 import sys
 from helper.get_temperature import get_temperatures
 from helper.input_consumption import ElectricityTracker
+from config import spreadsheet_url
 
 def add_data():
     """ Calls the helper.input_consumption module, sending the user input
@@ -46,7 +47,7 @@ def add_new_month():
 def open_spreadsheet():
     """ Opens the spreadsheet determined by the 'url' variable
     in the function. """
-    url = "https://docs.google.com/spreadsheets/d/1ium8LIi9zPujZi17ntmYBx5nK3m0dsbkBwDgIDAvSHo/edit?usp=sharing"
+    url = spreadsheet_url
     webbrowser.open_new(url)  # Open the URL link in the default web browser
 
 def exit_application():

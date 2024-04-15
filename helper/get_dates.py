@@ -1,4 +1,3 @@
-import pandas as pd
 from datetime import datetime, timedelta
 import gspread
 from google.oauth2.service_account import Credentials
@@ -14,8 +13,14 @@ credentials = Credentials.from_service_account_file(credentials_file, scopes=[
         ])
 
 def get_dates():
+    """ From the spreadsheet, fetches the last existing date for temperature 
+    data. Based on the existing data, creates a start_date and end_date to use
+    in the FMI API request.
+     
+    start_date: The last existing date in spreadsheet + 1 (at 00:00:00)
+    end_date: The previous calendar day (at 23:59:59) """
     gc = gspread.authorize(credentials)
-    spreadsheet_title = "Sähkönkulutus"
+    spreadsheet_title = "ElectricityTracker"
     spreadsheet = gc.open(spreadsheet_title)
     sheet = spreadsheet.get_worksheet(6)
 
@@ -30,9 +35,3 @@ def get_dates():
     end_date = end_date.strftime("%Y-%m-%dT23:59:59Z")
 
     return start_date, end_date
-
-
-# Test above function
-start_date, end_date = get_dates()
-print("Start date: ", start_date)
-print("End date: ", end_date)

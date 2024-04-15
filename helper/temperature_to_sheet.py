@@ -1,7 +1,5 @@
 import gspread
 from google.oauth2.service_account import Credentials
-import pandas as pd
-from tkinter import messagebox
 
 import sys
 import os
@@ -14,8 +12,9 @@ credentials = Credentials.from_service_account_file(credentials_file, scopes=[
         ])
 
 def temperature_to_sheet(new_temperatures):
+    """ Updates the new temperature data into the spreadsheet. """
     gc = gspread.authorize(credentials)
-    spreadsheet_title = "Sähkönkulutus"
+    spreadsheet_title = "ElectricityTracker"
     spreadsheet = gc.open(spreadsheet_title)
     sheet = spreadsheet.get_worksheet(6)
 
@@ -25,10 +24,8 @@ def temperature_to_sheet(new_temperatures):
 
     sheet.update(values=data, range_name=row_range)
 
-    messagebox.showinfo("Success", "Säätiedot lisätty")  # Show success message
-
-
 
 """ Test function with existing .csv """
+# import pandas as pd
 # df = pd.read_csv("data/loaded_data.csv")
 # temperature_to_sheet(df)

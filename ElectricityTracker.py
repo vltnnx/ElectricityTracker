@@ -1,49 +1,15 @@
 import tkinter as tk
-from tkinter import messagebox
 from PIL import Image, ImageTk
-import gspread
-from google.oauth2.service_account import Credentials
 import webbrowser
 import sys
 from helper.get_temperature import get_temperatures
-from config import credentials_file
-
-class ElectricityTracker:
-    def __init__(self, start_day, end_day, kwh, cost_consumption, cost_transfer):
-        self.start_day = start_day
-        self.end_day = end_day
-        self.kwh = kwh
-        self.cost_consumption = cost_consumption
-        self.cost_transfer = cost_transfer
-
-        self.credentials_file = credentials_file
-        self.credentials = Credentials.from_service_account_file(self.credentials_file, scopes=[
-        'https://spreadsheets.google.com/feeds', 
-        'https://www.googleapis.com/auth/drive'
-        ])
-        self.gc = gspread.authorize(self.credentials)
-        self.spreadsheet_title = "Sähkönkulutus"
-        self.spreadsheet = self.gc.open(self.spreadsheet_title)
-        self.sheet = self.spreadsheet.get_worksheet(5)
-
-
-    def append_to_sheet(self):
-        next_row = len(self.sheet.get_all_values()) + 1
-        data = [self.start_day, self.end_day, self.kwh, self.cost_consumption, self.cost_transfer]
-        row_range = f"A{next_row}"
-        self.sheet.update(values=[data], range_name=row_range)
-
-        messagebox.showinfo("Success", "Tiedot lisätty")  # Show success message
-
-        # Clear entry boxes
-        start_day_box.delete(0, tk.END)
-        end_day_box.delete(0, tk.END)
-        kwh_box.delete(0, tk.END)
-        consumption_box.delete(0, tk.END)
-        transfer_box.delete(0, tk.END)
-
+from helper.input_consumption import ElectricityTracker
 
 def add_data():
+    """ Calls the helper.input_consumption module, sending the user input
+    for electricity consumption to be added into the spreadsheet. 
+    
+    The input window is withdrawn once the input is submitted."""
     start_day = start_day_box.get()
     end_day = end_day_box.get()
     kwh = float(kwh_box.get())
@@ -52,11 +18,19 @@ def add_data():
 
     root_input.withdraw()
 
-    tracker = ElectricityTracker(start_day, end_day, kwh, consumption, transfer)
-    tracker.append_to_sheet()
+    user_input = ElectricityTracker(start_day, end_day, kwh, consumption, transfer)
+    user_input.append_to_sheet()
 
+    # Clear entry boxes
+    start_day_box.delete(0, tk.END)
+    end_day_box.delete(0, tk.END)
+    kwh_box.delete(0, tk.END)
+    consumption_box.delete(0, tk.END)
+    transfer_box.delete(0, tk.END)
 
 def on_entry_click(event, entry, placeholder):
+    """ Adjusts the color of the input fields in root_input window
+    while placeholder texts are visible """
     if entry.get() == placeholder:
         entry.delete(0, "end")  
         entry.insert(0, '')  
@@ -64,23 +38,25 @@ def on_entry_click(event, entry, placeholder):
     else:
         entry.config(fg='black')  
 
-
 def add_new_month():
-    root_input.deiconify()  # Show the main/input window
-
+    """ Shows the input window when 'Input consumption' is pressed
+    in the root_startup window."""
+    root_input.deiconify()
 
 def open_spreadsheet():
-    url = "https://docs.google.com/spreadsheets/d/1F-abYkuUtcejGjpjwbB9ju9FXr3lJAz00O1KNyL39tQ/edit?usp=sharing"
+    """ Opens the spreadsheet determined by the 'url' variable
+    in the function. """
+    url = "https://docs.google.com/spreadsheets/d/1ium8LIi9zPujZi17ntmYBx5nK3m0dsbkBwDgIDAvSHo/edit?usp=sharing"
     webbrowser.open_new(url)  # Open the URL link in the default web browser
 
-
 def exit_application():
+    """ Closes the root_startup window when 'Exit' button is pressed. """
     root_startup.destroy()
     root_input.destroy()
     sys.exit()
 
-
 def center_window(window):
+    """ Function to center the windows on screen. """
     window.update_idletasks()
     width = window.winfo_width()
     height = window.winfo_height()
@@ -88,19 +64,20 @@ def center_window(window):
     y = (window.winfo_screenheight() // 2) - (height // 2)
     window.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
-# Main/input window
+# Input window
 root_input = tk.Tk()
 root_input.geometry("300x360")
-root_input.title("Sähkönkulutus")
-root_input.withdraw()  # Hide the input window initially
+root_input.title("Electricity tracker")
+root_input.withdraw()  # Hides the input window initially
 center_window(root_input)
 
 # Start-up window
 root_startup = tk.Tk()
 root_startup.geometry("600x100")
-root_startup.title("Sähkönkulutus")
+root_startup.title("Electricity tracker")
 center_window(root_startup)
 
+# Start-up window
 button_frame = tk.Frame(root_startup)
 button_frame.pack(side="top", anchor="center", pady=10)
 
@@ -128,6 +105,7 @@ placeholders = {
     "transfer": "0.00"
 }
 
+# Input window configurations
 image = Image.open("static/img/icon.png")
 resized_image = image.resize((30,30))
 new_image = ImageTk.PhotoImage(resized_image)

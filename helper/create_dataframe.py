@@ -2,6 +2,8 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 
 def create_df(xml_data):
+    """ Parses the XML data from FMI API query into a pandas DataFrame. 
+    Returns new_temperatures DataFrame. """
     parsed_xml = ET.fromstring(xml_data.content)
     rows = []
 
@@ -19,12 +21,5 @@ def create_df(xml_data):
 
     # New temperatures into a DataFrame
     new_temperatures = pd.DataFrame(data=rows, columns=["date", "temperature"])
-
-    # Load existing temperature data
-    old_temperatures = pd.read_csv("data/loaded_data.csv")
-
-    # Append new data to existing data and create .csv
-    loaded_data = pd.concat([old_temperatures, new_temperatures], ignore_index=True)
-    loaded_data.to_csv("data/loaded_data.csv", index=False)
 
     return new_temperatures

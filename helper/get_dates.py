@@ -22,7 +22,7 @@ def get_dates():
     gc = gspread.authorize(credentials)
     spreadsheet_title = "ElectricityTracker"
     spreadsheet = gc.open(spreadsheet_title)
-    sheet = spreadsheet.get_worksheet(6)
+    sheet = spreadsheet.get_worksheet(3)
 
     current_dates = sheet.get_all_values()
     last_date = current_dates[-1][0]

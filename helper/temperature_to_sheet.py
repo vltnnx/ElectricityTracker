@@ -16,7 +16,7 @@ def temperature_to_sheet(new_temperatures):
     gc = gspread.authorize(credentials)
     spreadsheet_title = "ElectricityTracker"
     spreadsheet = gc.open(spreadsheet_title)
-    sheet = spreadsheet.get_worksheet(6)
+    sheet = spreadsheet.get_worksheet(3)
 
     next_row = len(sheet.get()) + 1
     data = new_temperatures.values.tolist()

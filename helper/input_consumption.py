@@ -21,7 +21,7 @@ class ElectricityTracker:
         self.gc = gspread.authorize(self.credentials)
         self.spreadsheet_title = "ElectricityTracker"
         self.spreadsheet = self.gc.open(self.spreadsheet_title)
-        self.sheet = self.spreadsheet.get_worksheet(5)
+        self.sheet = self.spreadsheet.get_worksheet(2)
 
 
     def append_to_sheet(self):

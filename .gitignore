@@ -1,3 +1,6 @@
-.json
+*.json
 config.py
 __pycache__
+test_hovermessage.py
+test.ipynb
+ttkbootstrap_UI_test.py

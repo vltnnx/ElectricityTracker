@@ -20,9 +20,11 @@ def temperature_to_sheet(new_temperatures):
 
     next_row = len(sheet.get()) + 1
     data = new_temperatures.values.tolist()
+    # Convert the second values in each sublist to float
+    converted_data = [[date, float(temp)] for date, temp in data]
     row_range = f"A{next_row}"
 
-    sheet.update(values=data, range_name=row_range)
+    sheet.update(values=converted_data, range_name=row_range)
 
 
 """ Test function with existing .csv """

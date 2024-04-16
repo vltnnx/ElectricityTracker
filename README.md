@@ -6,6 +6,8 @@ This is a project created for tracking household energy consumption and its cost
 - Uses FMI API to download latest temperature data to compare with energy consumption
 - Google Sheet document to store and visualise the data in a dashboard
 
+![ElectricityTracker demo GIF](https://raw.githubusercontent.com/vltnnx/Electricity-Tracker/main/static/img/git-demo.gif)
+
 ## Notes for users:
 Feel free to fork the project and use for yourself. Below are some helpful notes.
 
